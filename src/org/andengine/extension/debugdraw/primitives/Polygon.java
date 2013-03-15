@@ -45,16 +45,24 @@ public class Polygon extends Mesh {
 	 * Uses a default {@link HighPerformanceMeshVertexBufferObject} in {@link DrawType#STATIC} with the {@link VertexBufferObjectAttribute}s: {@link Mesh#VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT}.
 	 */
 	public Polygon(final float pX, final float pY, final float[] pVertexX, 	final float[] pVertexY, final VertexBufferObjectManager pVertexBufferObjectManager) {
-		this(pX, pY, pVertexX, pVertexY, pVertexBufferObjectManager, DrawType.STATIC);
+		this(pX, pY, 0f, 0f, pVertexX, pVertexY, pVertexBufferObjectManager);
+	}
+
+	public Polygon(final float pX, final float pY, final float pWidth, final float pHeight, final float[] pVertexX, final float[] pVertexY, final VertexBufferObjectManager pVertexBufferObjectManager) {
+		this(pX, pY, pWidth, pHeight, pVertexX, pVertexY, pVertexBufferObjectManager, DrawType.STATIC);
 	}
 
 	/**
 	 * Uses a default {@link HighPerformanceMeshVertexBufferObject} with the {@link VertexBufferObjectAttribute}s: {@link Mesh#VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT}.
 	 */
 	public Polygon(final float pX, final float pY, final float[] pVertexX, 	float[] pVertexY, final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
-		this(pX, pY, buildVertexList(mTriangulator.computeTriangles(buildListOfVector2(pVertexX, pVertexY))), VERTEX_SIZE_DEFAULT_RATIO, pVertexBufferObjectManager, pDrawType);
+		this(pX, pY, 0, 0, pVertexX, pVertexY, pVertexBufferObjectManager, pDrawType);
+	}
 
-		assert (mVertexX.length == mVertexY.length);
+	public Polygon(final float pX, final float pY, final float pWidth, final float pHeight, final float[] pVertexX, final float[] pVertexY, final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
+		this(pX, pY, pWidth, pHeight, buildVertexList(mTriangulator.computeTriangles(buildListOfVector2(pVertexX, pVertexY))), VERTEX_SIZE_DEFAULT_RATIO, pVertexBufferObjectManager, pDrawType);
+
+		assert (pVertexX.length == pVertexY.length);
 		mVertexX = pVertexX;
 		mVertexY = pVertexY;
 	}
@@ -63,7 +71,11 @@ public class Polygon extends Mesh {
 	 * Uses a default {@link HighPerformanceMeshVertexBufferObject} with the {@link VertexBufferObjectAttribute}s: {@link Mesh#VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT}.
 	 */
 	public Polygon(final float pX, final float pY, final float[] pBufferData, final float sizeRatio, final VertexBufferObjectManager pVertexBufferObjectManager, 	final DrawType pDrawType) {
-		super(pX, pY, (int) ((pBufferData.length / VERTEX_SIZE) * sizeRatio), DrawMode.TRIANGLES, new HighPerformanceMeshVertexBufferObject(pVertexBufferObjectManager, pBufferData, (int) ((pBufferData.length / VERTEX_SIZE) * sizeRatio), pDrawType, true, Mesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
+		this(pX, pY, 0, 0, pBufferData, sizeRatio, pVertexBufferObjectManager, pDrawType);
+	}
+
+	public Polygon(final float pX, final float pY, final float pWidth, final float pHeight, final float[] pBufferData, final float sizeRatio, final VertexBufferObjectManager pVertexBufferObjectManager, final DrawType pDrawType) {
+		super(pX, pY, pWidth, pHeight, (int) ((pBufferData.length / Mesh.VERTEX_SIZE) * sizeRatio), DrawMode.TRIANGLES, new HighPerformanceMeshVertexBufferObject(pVertexBufferObjectManager, pBufferData, (int) ((pBufferData.length / Mesh.VERTEX_SIZE) * sizeRatio), pDrawType, true, Mesh.VERTEXBUFFEROBJECTATTRIBUTES_DEFAULT));
 
 		onUpdateVertices();
 	}
